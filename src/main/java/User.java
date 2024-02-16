@@ -1,9 +1,11 @@
 /*
-    id int not null auto_increment primary key,
+    drop table if exists Users;
+    create table Users;
+    (ID int not null auto_increment primary key,
     username char(40),
-    password char(20),
-    displayName char(),
-    isAdmin boolean
+    password char(40),
+    displayName char(40),
+    isAdmin int);
  */
 
 public class User {
@@ -12,6 +14,10 @@ public class User {
     private String password;
     private String displayName;
     private boolean isAdmin;
+
+    public User() {
+        //default constructor
+    };
 
     public User(int id, String username, String password, String displayName, boolean isAdmin) {
         this.id = id;

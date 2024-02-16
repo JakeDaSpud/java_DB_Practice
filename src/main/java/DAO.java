@@ -1,10 +1,11 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.awt.*;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 //DAO == Data Access Object
 public class DAO {
-    private String url = "jdbc:mysql://localhost/";
+    private String url = "jdbc:mysql://127.0.0.1/";
     private String dbname = "test";
     private String username = "root";
     private String password = "";
@@ -24,7 +25,8 @@ public class DAO {
         return instance;
     };
 
-    private Connection getConnection() {
+    //SHOULD BE PRIVATE
+    public Connection getConnection() {
         try {
             Connection conn = DriverManager.getConnection(url + dbname, username, password);
                     return conn;
@@ -32,8 +34,29 @@ public class DAO {
 
         catch (SQLException e) {
             System.out.println("Unable to connect to database.");
+            e.printStackTrace();
             return null;
         }
+    }
+
+    public List<User> getAllUsers() throws SQLException {
+        List<User> users = new ArrayList<>();
+        Connection conn = getConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet results = stmt.executeQuery("Select * from Users");
+
+        while (results.next()) {
+            User u = new User();
+            u.setId(results.getInt("ID"));
+            u.setUsername(results.getString("username"));
+            u.setPassword(results.getString("password"));
+            u.setDisplayName(results.getString("displayName"));
+            u.setAdmin(results.getInt("isAdmin") == 1);
+            users.add(u);
+        }
+
+        conn.close();
+        return users;
     }
 
     public String getUrl() {
